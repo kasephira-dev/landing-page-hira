@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CamSpot - Marketplace Kamera & Photogear Modern</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#fff1f2',
+                            500: '#e11d48',
+                            600: '#e11d48',
+                            700: '#be123c',
+                            accent: '#f43f5e'
+                        },
+                        darkbg: '#0f172a',
+                        darkcard: '#1e293b',
+                        darkborder: '#334155'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0b0f19;
+            color: #f1f5f9;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col bg-slate-950 text-slate-100">
+
+    <!-- Navbar Navigation -->
+    <header class="sticky top-0 z-40 w-full glass-card border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 gap-4">
+                
+                <!-- Logo -->
+                <div class="flex items-center gap-3 cursor-pointer" onclick="resetFilters()">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-rose-600 to-amber-500 flex items-center justify-center shadow-lg shadow-rose-500/20">
+                        <i class="fa-solid font-bold fa-camera text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-rose-400 bg-clip-text text-transparent">CamSpot</span>
+                        <span class="hidden sm:inline-block text-[10px] bg-rose-500/20 text-rose-400 font-semibold px-2 py-0.5 rounded-full ml-1 border border-rose-500/30">MARKET</span>
+                    </div>
+                </div>
+
+                <!-- Global Search Bar -->
+                <div class="flex-1 max-w-xl mx-2 sm:mx-4">
+                    <div class="relative">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                        <input type="text" id="searchInput" oninput="handleSearch()" placeholder="Cari Sony A7IV, Lensa 35mm, Leica, Hasselblad..." 
+                            class="w-full bg-slate-900/90 border border-slate-700/70 rounded-full pl-10 pr-10 py-2 text-sm text-slate-200 placeholder-slate-400 focus:outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition-all shadow-inner">
+                        <button id="clearSearchBtn" onclick="clearSearch()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white">
+                            <i class="fa-solid fa-circle-xmark"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Header Actions (Wishlist, Compare, Cart, Sell Button) -->
+                <div class="flex items-center gap-2 sm:gap-4">
+                    
+                    <!-- Compare Button -->
+                    <button onclick="openCompareModal()" class="relative p-2.5 rounded-xl hover:bg-slate-800 text-slate-300 hover:text-white transition-colors" title="Bandingkan Kamera">
+                        <i class="fa-solid fa-code-compare text-lg"></i>
+                        <span id="compareBadge" class="hidden absolute -top-1 -right-1 bg-amber-500 text-slate-950 text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-slate-950">0</span>
+                    </button>
+
+                    <!-- Wishlist Button -->
+                    <button onclick="openWishlistModal()" class="relative p-2.5 rounded-xl hover:bg-slate-800 text-slate-300 hover:text-white transition-colors" title="Wishlist">
+                        <i class="fa-regular fa-heart text-lg"></i>
+                        <span id="wishlistBadge" class="hidden absolute -top-1 -right-1 bg-rose-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-slate-950">0</span>
+                    </button>
+
+                    <!-- Cart Button -->
+                    <button onclick="openCartModal()" class="relative p-2.5 rounded-xl hover:bg-slate-800 text-slate-300 hover:text-white transition-colors" title="Keranjang Belanja">
+                        <i class="fa-solid fa-cart-shopping text-lg"></i>
+                        <span id="cartBadge" class="hidden absolute -top-1 -right-1 bg-emerald-500 text-slate-950 text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-slate-950">0</span>
+                    </button>
+
+                    <!-- Jual Kamera Button -->
+                    <button onclick="openSellModal()" class="hidden sm:flex items-center gap-2 bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-500 hover:to-rose-600 text-white font-medium text-xs sm:text-sm px-4 py-2 rounded-xl transition-all shadow-md shadow-rose-900/30 active:scale-95">
+                        <i class="fa-solid fa-plus-circle text-sm"></i>
+                        <span>Jual / Tawar</span>
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Banner Section -->
+    <section class="relative border-b border-slate-800/80 bg-gradient-to-b from-slate-900 to-slate-950 py-8 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col lg:flex-row items-center justify-between gap-6 bg-gradient-to-r from-slate-900 via-rose-950/20 to-slate-900 p-6 sm:p-8 rounded-3xl border border-slate-800 shadow-2xl relative overflow-hidden">
+                <!-- Decorative Blur -->
+                <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-rose-600/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute -left-20 -top-20 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                
+                <div class="space-y-4 max-w-2xl z-10 text-center lg:text-left">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-medium">
+                        <i class="fa-solid fa-shield-halved"></i> Garansi & Inspeksi Fisik 100% Terjamin
+                    </div>
+                    <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white leading-tight">
+                        Pasar Kamera, Lensa & Cinema Gear Terpercaya.
+                    </h1>
+                    <p class="text-slate-400 text-sm sm:text-base leading-relaxed">
+                        Beli, jual, atau sewa kamera Mirrorless, DSLR, Vintage, hingga Cinema Camera dengan kondisi terverifikasi dan garansi lengkap.
+                    </p>
+                    
+                    <!-- Beli vs Sewa Toggle -->
+                    <div class="flex items-center justify-center lg:justify-start gap-3 pt-2">
+                        <div class="bg-slate-950 p-1.5 rounded-2xl border border-slate-800 flex items-center gap-1 shadow-inner">
+                            <button id="modeBuyBtn" onclick="setListingMode('buy')" class="px-5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-rose-600 text-white shadow-md">
+                                <i class="fa-solid fa-bag-shopping mr-1.5"></i> Beli Kamera
+                            </button>
+                            <button id="modeRentBtn" onclick="setListingMode('rent')" class="px-5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all text-slate-400 hover:text-white">
+                                <i class="fa-solid fa-clock-rotate-left mr-1.5"></i> Sewa / Rental
+                            </button>
+                        </div>
+                        <button onclick="openSellModal()" class="sm:hidden px-4 py-2 bg-slate-800 text-rose-400 rounded-xl text-xs font-semibold border border-slate-700">
+                            + Jual
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Highlight Stats Card -->
+                <div class="grid grid-cols-2 gap-3 w-full lg:w-auto z-10">
+                    <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-800 text-center">
+                        <div class="text-2xl font-black text-rose-500">1,250+</div>
+                        <div class="text-xs text-slate-400">Unit Terverifikasi</div>
+                    </div>
+                    <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-800 text-center">
+                        <div class="text-2xl font-black text-amber-400">4.9/5.0</div>
+                        <div class="text-xs text-slate-400">Rating Komunitas</div>
+                    </div>
+                    <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-800 text-center">
+                        <div class="text-2xl font-black text-emerald-400">100%</div>
+                        <div class="text-xs text-slate-400">Cek Shutter Count</div>
+                    </div>
+                    <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-800 text-center">
+                        <div class="text-2xl font-black text-sky-400">24/7</div>
+                        <div class="text-xs text-slate-400">Support Fotografer</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Mobile Filter Toggle & Sort Bar -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+            <div class="flex items-center justify-between">
+                <button onclick="toggleMobileFilter()" class="lg:hidden flex items-center gap-2 bg-slate-900 border border-slate-800 px-4 py-2 rounded-xl text-sm font-medium text-slate-200">
+                    <i class="fa-solid fa-filter text-rose-500"></i> Filter Katalog
+                </button>
+                <div class="text-sm text-slate-400">
+                    Menampilkan <span id="itemCount" class="font-bold text-white">0</span> produk
+                </div>
+            </div>
+
+            <!-- Sorting Dropdown -->
+            <div class="flex items-center gap-3">
+                <label for="sortSelect" class="text-xs text-slate-400 font-medium whitespace-nowrap">Urutkan:</label>
+                <select id="sortSelect" onchange="handleSortChange()" class="bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-rose-500">
+                    <option value="popular">Paling Populer</option>
+                    <option value="newest">Terbaru Ditambahkan</option>
+                    <option value="price-low">Harga: Termurah ke Termahal</option>
+                    <option value="price-high">Harga: Termahal ke Termurah</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+
+            <!-- Sidebar Filters -->
+            <aside id="filterSidebar" class="hidden lg:block lg:col-span-1 space-y-6 bg-slate-900/60 p-5 rounded-2xl border border-slate-800/80 h-fit sticky top-24">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                    <h2 class="font-bold text-slate-100 flex items-center gap-2">
+                        <i class="fa-solid fa-[#f43f5e] fa-sliders text-rose-500"></i> Filter Produk
+                    </h2>
+                    <button onclick="resetFilters()" class="text-xs text-rose-400 hover:text-rose-300 font-medium">Reset</button>
+                </div>
+
+                <!-- Kategori Filter -->
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2.5">Kategori Gear</label>
+                    <div id="categoryFilters" class="space-y-1.5">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Brand Filter -->
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2.5">Brand / Merk</label>
+                    <div id="brandFilters" class="space-y-1.5">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Condition Filter -->
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2.5">Kondisi Barang</label>
+                    <div id="conditionFilters" class="space-y-1.5">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Price Range Filter -->
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Rentang Harga (Rp)</label>
+                    <div class="space-y-3">
+                        <div>
+                            <input type="range" id="priceRange" min="1000000" max="120000000" step="1000000" class="w-full accent-rose-500 bg-slate-800 rounded-lg cursor-pointer" oninput="updatePriceLabel()">
+                            <div class="flex justify-between text-xs text-slate-400 mt-1">
+                                <span>Rp 1 Jt</span>
+                                <span id="priceLabel" class="font-bold text-rose-400">Rp 120 Jt</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Catalog Grid -->
+            <section class="lg:col-span-3">
+                <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                    <!-- Cards injected via JS -->
+                </div>
+
+                <!-- Empty State -->
+                <div id="emptyState" class="hidden text-center py-16 bg-slate-900/40 rounded-3xl border border-slate-800/80">
+                    <div class="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-500 text-2xl">
+                        <i class="fa-solid fa-camera-retro"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-1">Kamera Tidak Ditemukan</h3>
+                    <p class="text-slate-400 text-sm max-w-md mx-auto mb-4">Coba atur ulang kata kunci pencarian atau bersihkan filter brand/kategori Anda.</p>
+                    <button onclick="resetFilters()" class="px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white rounded-xl text-xs font-semibold transition-all">
+                        Reset Filter
+                    </button>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="mt-20 border-t border-slate-800 bg-slate-950 pt-12 pb-8 text-slate-400 text-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+            <div class="space-y-3">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-rose-600 flex items-center justify-center text-white font-bold">
+                        <i class="fa-solid fa-camera"></i>
+                    </div>
+                    <span class="text-lg font-bold text-white tracking-wide">CamSpot</span>
+                </div>
+                <p class="text-xs text-slate-400 leading-relaxed">
+                    Platform jual-beli & rental kamera, lensa, serta aksesori sinematografi terpercaya di Indonesia dengan pengecekan fungsi fisik & sensor terjamin.
+                </p>
+            </div>
+            <div>
+                <h4 class="font-semibold text-white mb-3 text-xs uppercase tracking-wider">Kategori Populer</h4>
+                <ul class="space-y-2 text-xs">
+                    <li><a href="#" onclick="filterByCategory('Mirrorless')" class="hover:text-rose-400">Kamera Mirrorless</a></li>
+                    <li><a href="#" onclick="filterByCategory('Cinema Camera')" class="hover:text-rose-400">Cinema & Production</a></li>
+                    <li><a href="#" onclick="filterByCategory('Lensa')" class="hover:text-rose-400">Lensa Prime & Zoom</a></li>
+                    <li><a href="#" onclick="filterByCategory('Vintage / Analog')" class="hover:text-rose-400">Kamera Vintage & Analog</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-semibold text-white mb-3 text-xs uppercase tracking-wider">Layanan Pelanggan</h4>
+                <ul class="space-y-2 text-xs">
+                    <li><a href="#" class="hover:text-rose-400">Panduan Cek Shutter Count</a></li>
+                    <li><a href="#" class="hover:text-rose-400">Simulasi Tukar Tambah</a></li>
+                    <li><a href="#" class="hover:text-rose-400">Ketentuan Garansi Fungsional</a></li>
+                    <li><a href="#" class="hover:text-rose-400">Ketentuan Rental Gear</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-semibold text-white mb-3 text-xs uppercase tracking-wider">Metode Pembayaran</h4>
+                <div class="flex flex-wrap gap-2 text-xl text-slate-500 mb-4">
+                    <i class="fa-brands fa-cc-visa hover:text-white"></i>
+                    <i class="fa-brands fa-cc-mastercard hover:text-white"></i>
+                    <i class="fa-solid fa-building-columns hover:text-white"></i>
+                    <i class="fa-solid fa-wallet hover:text-white"></i>
+                </div>
+                <p class="text-xs text-slate-500">© 2026 CamSpot Indonesia. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+
+    <!-- 1. DETAIL PRODUK MODAL -->
+    <div id="detailModal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl relative">
+            <button onclick="closeModal('detailModal')" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-300 flex items-center justify-center z-10 transition-colors">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <div id="detailModalContent" class="p-6 sm:p-8">
+                <!-- Content injected via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. KERANJANG MODAL -->
+    <div id="cartModal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-xl w-full p-6 shadow-2xl flex flex-col max-h-[85vh]">
+            <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-cart-shopping text-rose-500"></i> Keranjang Belanja
+                </h3>
+                <button onclick="closeModal('cartModal')" class="text-slate-400 hover:text-white">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div id="cartItemsList" class="flex-1 overflow-y-auto py-4 space-y-3">
+                <!-- Items injected via JS -->
+            </div>
+
+            <div class="pt-4 border-t border-slate-800 space-y-3">
+                <div class="flex justify-between text-sm">
+                    <span class="text-slate-400">Total Harga</span>
+                    <span id="cartTotalPrice" class="font-extrabold text-lg text-rose-400">Rp 0</span>
+                </div>
+                <button onclick="simulateCheckout()" class="w-full bg-rose-600 hover:bg-rose-500 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-rose-900/30">
+                    Lanjut Ke Pembayaran / Checkout
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. WISHLIST MODAL -->
+    <div id="wishlistModal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-xl w-full p-6 shadow-2xl flex flex-col max-h-[85vh]">
+            <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-heart text-rose-500"></i> Wishlist / Kamera Favorit
+                </h3>
+                <button onclick="closeModal('wishlistModal')" class="text-slate-400 hover:text-white">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div id="wishlistItemsList" class="flex-1 overflow-y-auto py-4 space-y-3">
+                <!-- Items injected via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. COMPARE CAMERA MODAL -->
+    <div id="compareModal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-5xl w-full p-6 shadow-2xl overflow-y-auto max-h-[90vh]">
+            <div class="flex items-center justify-between pb-4 border-b border-slate-800 mb-6">
+                <div>
+                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-code-compare text-amber-500"></i> Komparasi Spesifikasi Kamera
+                    </h3>
+                    <p class="text-xs text-slate-400">Bandingkan sensor, resolusi video, dan spesifikasi teknis hingga 3 produk.</p>
+                </div>
+                <button onclick="closeModal('compareModal')" class="text-slate-400 hover:text-white">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div id="compareTableContainer" class="overflow-x-auto">
+                <!-- Side by side table injected via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. FORM JUAL KAMERA MODAL -->
+    <div id="sellModal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl overflow-y-auto max-h-[90vh]">
+            <div class="flex items-center justify-between pb-4 border-b border-slate-800 mb-6">
+                <div>
+                    <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-camera-retro text-rose-500"></i> Jual / Tawar Kamera Kamu
+                    </h3>
+                    <p class="text-xs text-slate-400">Isi kelengkapan kamera Anda untuk langsung masuk katalog atau ditawar langsung oleh tim CamSpot.</p>
+                </div>
+                <button onclick="closeModal('sellModal')" class="text-slate-400 hover:text-white">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <form onsubmit="handleSellSubmit(event)" class="space-y-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Nama / Judul Produk *</label>
+                        <input type="text" required placeholder="Contoh: Sony A7 III Body Only" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-200 focus:border-rose-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Brand *</label>
+                        <select required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-200 focus:border-rose-500 focus:outline-none">
+                            <option value="Sony">Sony</option>
+                            <option value="Canon">Canon</option>
+                            <option value="Nikon">Nikon</option>
+                            <option value="Fujifilm">Fujifilm</option>
+                            <option value="Leica">Leica</option>
+                            <option value="Blackmagic">Blackmagic</option>
+                            <option value="Lainnya">Lainnya</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Kategori *</label>
+                        <select required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-200 focus:border-rose-500 focus:outline-none">
+                            <option value="Mirrorless">Mirrorless</option>
+                            <option value="DSLR">DSLR</option>
+                            <option value="Lensa">Lensa</option>
+                            <option value="Vintage / Analog">Vintage / Analog</option>
+                            <option value="Cinema Camera">Cinema Camera</option>
+                            <option value="Aksesoris">Aksesoris</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Kondisi *</label>
+                        <select required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-200 focus:border-rose-500 focus:outline-none">
+                            <option value="Bekas Mulus">Bekas Mulus (95%+)</option>
+                            <option value="Baru">Baru (BNIB)</option>
+                            <option value="Refurbished">Refurbished</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Shutter Count (JIKA BEKAS)</label>
+                        <input type="number" placeholder="Contoh: 12500" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-200 focus:border-rose-500 focus:outline-none">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Harga Ditawarkan (Rp) *</label>
+                        <input type="number" required placeholder="15000000" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-200 focus:border-rose-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Lokasi Penjual *</label>
+                        <input type="text" required placeholder="Jakarta Selatan / Bandung / Surabaya" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-200 focus:border-rose-500 focus:outline-none">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Deskripsi & Kelengkapan *</label>
+                    <textarea rows="3" required placeholder="Sebutkan kelengkapan box, pemakaian pribadi, minus jika ada, sensor jamur/bersih..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-slate-200 focus:border-rose-500 focus:outline-none"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Unggah Foto Unit (Simulasi)</label>
+                    <div class="border-2 border-dashed border-slate-800 rounded-2xl p-4 text-center cursor-pointer hover:border-rose-500/50 transition-colors bg-slate-950">
+                        <i class="fa-solid fa-cloud-arrow-up text-2xl text-slate-500 mb-1"></i>
+                        <p class="text-xs text-slate-400">Klik atau seret foto kamera ke area ini (Maks. 5 Foto)</p>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full bg-rose-600 hover:bg-rose-500 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-rose-900/30">
+                    Kirim Penawaran Iklan
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 bg-slate-900 border border-rose-500/40 text-slate-100 px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+        <i id="toastIcon" class="fa-solid fa-circle-check text-rose-500 text-lg"></i>
+        <span id="toastMsg" class="text-xs sm:text-sm font-medium">Pesan notifikasi</span>
+    </div>
+
+    <script>
+        // --- 1. PRODUCT DATABASE ---
+        const productsData = [
+            {
+                id: 1,
+                name: "Sony Alpha A7 IV Body Only",
+                brand: "Sony",
+                category: "Mirrorless",
+                condition: "Bekas Mulus",
+                buyPrice: 32500000,
+                rentPricePerDay: 450000,
+                shutterCount: 8400,
+                rating: 4.9,
+                reviewsCount: 38,
+                seller: "Alpha Gear ID",
+                location: "Jakarta Selatan",
+                image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&q=80",
+                badge: "Terlaris",
+                specs: {
+                    sensor: "33 MP Full-Frame Exmor R CMOS",
+                    processor: "BIONZ XR",
+                    video: "4K 60p 10-Bit 4:2:2",
+                    mount: "Sony E-mount",
+                    iso: "100 - 51,200 (Exp 50-204,800)",
+                    weight: "658g"
+                },
+                description: "Kondisi sangat mulus 97%. Pemakaian hobi harian untuk foto portret. Sensor bening bebas jamur, tombol empuk, touchscreen normal. Kelengkapan fullset box original."
+            },
+            {
+                id: 2,
+                name: "Fujifilm X-T5 Mirrorless Camera",
+                brand: "Fujifilm",
+                category: "Mirrorless",
+                condition: "Baru",
+                buyPrice: 27990000,
+                rentPricePerDay: 380000,
+                shutterCount: 0,
+                rating: 5.0,
+                reviewsCount: 14,
+                seller: "Fuji Center Bandung",
+                location: "Bandung",
+                image: "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=800&q=80",
+                badge: "Garansi Resmi",
+                specs: {
+                    sensor: "40 MP APS-C X-Trans CMOS 5 HR",
+                    processor: "X-Processor 5",
+                    video: "6.2K 30p 10-Bit Internal",
+                    mount: "Fujifilm X-mount",
+                    iso: "125 - 12,800",
+                    weight: "557g"
+                },
+                description: "Kamera baru BNIB garansi resmi Fujifilm Indonesia 1 Tahun. Dial klasik khas Fuji, warna Film Simulation legendaris cocok untuk fotografi jalanan dan wedding."
+            },
+            {
+                id: 3,
+                name: "Canon EOS R6 Mark II Body",
+                brand: "Canon",
+                category: "Mirrorless",
+                condition: "Bekas Mulus",
+                buyPrice: 34200000,
+                rentPricePerDay: 480000,
+                shutterCount: 11200,
+                rating: 4.8,
+                reviewsCount: 22,
+                seller: "Canon Corner Surabaya",
+                location: "Surabaya",
+                image: "https://images.unsplash.com/photo-1519638399535-1b036603ac77?w=800&q=80",
+                badge: "In-Stock",
+                specs: {
+                    sensor: "24.2 MP Full-Frame CMOS",
+                    processor: "DIGIC X",
+                    video: "4K 60p Oversampled no crop",
+                    mount: "Canon RF Mount",
+                    iso: "100 - 102,400",
+                    weight: "670g"
+                },
+                description: "Fungsi 100% lancar, bekas pemakaian liputan acara hobi. Bodi ada goresan sangat minim di bagian bawah. Sensor sangat bersih."
+            },
+            {
+                id: 4,
+                name: "Leica M10-P Rangefinder Silver",
+                brand: "Leica",
+                category: "Vintage / Analog",
+                condition: "Refurbished",
+                buyPrice: 92000000,
+                rentPricePerDay: 1200000,
+                shutterCount: 4300,
+                rating: 5.0,
+                reviewsCount: 9,
+                seller: "Leica Vault Jakarta",
+                location: "Jakarta Pusat",
+                image: "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=800&q=80",
+                badge: "Langka",
+                specs: {
+                    sensor: "24 MP Full-Frame CMOS",
+                    processor: "Leica Maestro II",
+                    video: "Tidak ada (Murni Fotografi)",
+                    mount: "Leica M Mount",
+                    iso: "100 - 50,000",
+                    weight: "660g"
+                },
+                description: "Leica M10-P Silver Chrome bersertifikasi pembersihan internal Leica Store. Shutter paling senyap di kelasnya. Desain minimalis tanpa logo merah."
+            },
+            {
+                id: 5,
+                name: "Blackmagic Pocket Cinema Camera 6K Pro",
+                brand: "Blackmagic",
+                category: "Cinema Camera",
+                condition: "Bekas Mulus",
+                buyPrice: 38500000,
+                rentPricePerDay: 550000,
+                shutterCount: "Jam Kerja: 140 Jam",
+                rating: 4.9,
+                reviewsCount: 19,
+                seller: "CineRig Rent & Sale",
+                location: "Jakarta Barat",
+                image: "https://images.unsplash.com/photo-1589872783345-849a35bfe5d1?w=800&q=80",
+                badge: "Pro Cinema",
+                specs: {
+                    sensor: "Super 35 HDR Sensor",
+                    processor: "Blackmagic OS",
+                    video: "6K 60fps BRAW / ProRes",
+                    mount: "Canon EF Mount",
+                    iso: "Dual Native ISO 400 / 3200",
+                    weight: "1238g"
+                },
+                description: "BMPCC 6K Pro dengan Built-in ND Filter. Sangat terawat, bebas overheat. Bonus cage SmallRig & Power Cable D-Tap."
+            },
+            {
+                id: 6,
+                name: "Nikon Z8 Mirrorless Body Only",
+                brand: "Nikon",
+                category: "Mirrorless",
+                condition: "Baru",
+                buyPrice: 58900000,
+                rentPricePerDay: 850000,
+                shutterCount: 0,
+                rating: 4.9,
+                reviewsCount: 11,
+                seller: "Nikon Pro Shop",
+                location: "Semarang",
+                image: "https://images.unsplash.com/photo-1607462109225-6b64ae2dd3cb?w=800&q=80",
+                badge: "Flagship",
+                specs: {
+                    sensor: "45.7 MP Stacked Full-Frame CMOS",
+                    processor: "EXPEED 7",
+                    video: "8K 60p N-RAW Internal",
+                    mount: "Nikon Z Mount",
+                    iso: "64 - 25,600",
+                    weight: "910g"
+                },
+                description: "Mini Z9 flagship specs dalam bodi lebih ringkas. Bebas shutter mekanik. Produk resmi garansi Nikon Indonesia."
+            },
+            {
+                id: 7,
+                name: "Sony FE 35mm f/1.4 GM Lens",
+                brand: "Sony",
+                category: "Lensa",
+                condition: "Bekas Mulus",
+                buyPrice: 18200000,
+                rentPricePerDay: 250000,
+                shutterCount: "N/A",
+                rating: 4.9,
+                reviewsCount: 45,
+                seller: "Optik Kamera ID",
+                location: "Yogyakarta",
+                image: "https://images.unsplash.com/photo-1617005082133-548c4dd27f35?w=800&q=80",
+                badge: "G Master",
+                specs: {
+                    sensor: "Lensa Full Frame",
+                    processor: "Dual XD Linear Motor",
+                    video: "Aperture De-click Switch",
+                    mount: "Sony E-mount",
+                    iso: "Diafragma f/1.4 - f/16",
+                    weight: "524g"
+                },
+                description: "Lensa tajam G Master 35mm. Optik bebas jamur & fog. AF sangat cepat dan hening. Lens hood, cap depan belakang original."
+            },
+            {
+                id: 8,
+                name: "Canon AE-1 Program Vintage 35mm Film Camera",
+                brand: "Canon",
+                category: "Vintage / Analog",
+                condition: "Bekas Mulus",
+                buyPrice: 3800000,
+                rentPricePerDay: 120000,
+                shutterCount: "Mekanis",
+                rating: 4.7,
+                reviewsCount: 52,
+                seller: "Analog Vibes Store",
+                location: "Bandung",
+                image: "https://images.unsplash.com/photo-1520390138845-fd2d229dd553?w=800&q=80",
+                badge: "Analog Classic",
+                specs: {
+                    sensor: "35mm Film Format",
+                    processor: "Manual / Program AE",
+                    video: "N/A",
+                    mount: "Canon FD Mount",
+                    iso: "ASA 12 - 3200",
+                    weight: "575g"
+                },
+                description: "Kamera analog kokang klasik tahun 80an. Lightmeter hidup akurat, kokangan lancar, ruang film bersih, sudah diganti light seal baru."
+            }
+        ];
+
+        // --- 2. STATE MANAGEMENT ---
+        let currentListingMode = 'buy'; // 'buy' or 'rent'
+        let cart = [];
+        let wishlist = [];
+        let compareList = [];
+        let activeCategory = 'Semua';
+        let activeBrand = 'Semua';
+        let activeCondition = 'Semua';
+        let searchQuery = '';
+        let maxPrice = 120000000;
+        let sortBy = 'popular';
+
+        // --- 3. INITIALIZATION ---
+        window.addEventListener('DOMContentLoaded', () => {
+            initFilters();
+            renderProducts();
+        });
+
+        function initFilters() {
+            // Categories
+            const categories = ['Semua', 'Mirrorless', 'DSLR', 'Vintage / Analog', 'Lensa', 'Cinema Camera', 'Aksesoris'];
+            const catContainer = document.getElementById('categoryFilters');
+            catContainer.innerHTML = categories.map(cat => `
+                <button onclick="setCategoryFilter('${cat}')" class="category-btn w-full text-left px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${cat === 'Semua' ? 'bg-rose-600/20 text-rose-400 border border-rose-500/30' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}">
+                    ${cat}
+                </button>
+            `).join('');
+
+            // Brands
+            const brands = ['Semua', 'Sony', 'Canon', 'Nikon', 'Fujifilm', 'Leica', 'Blackmagic'];
+            const brandContainer = document.getElementById('brandFilters');
+            brandContainer.innerHTML = brands.map(b => `
+                <button onclick="setBrandFilter('${b}')" class="brand-btn w-full text-left px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${b === 'Semua' ? 'bg-rose-600/20 text-rose-400 border border-rose-500/30' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}">
+                    ${b}
+                </button>
+            `).join('');
+
+            // Conditions
+            const conditions = ['Semua', 'Baru', 'Bekas Mulus', 'Refurbished'];
+            const condContainer = document.getElementById('conditionFilters');
+            condContainer.innerHTML = conditions.map(c => `
+                <button onclick="setConditionFilter('${c}')" class="cond-btn w-full text-left px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${c === 'Semua' ? 'bg-rose-600/20 text-rose-400 border border-rose-500/30' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}">
+                    ${c}
+                </button>
+            `).join('');
+        }
+
+        // Mode Switching (Buy vs Rent)
+        function setListingMode(mode) {
+            currentListingMode = mode;
+            const buyBtn = document.getElementById('modeBuyBtn');
+            const rentBtn = document.getElementById('modeRentBtn');
+
+            if(mode === 'buy') {
+                buyBtn.className = "px-5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-rose-600 text-white shadow-md";
+                rentBtn.className = "px-5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all text-slate-400 hover:text-white";
+            } else {
+                rentBtn.className = "px-5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-amber-500 text-slate-950 shadow-md";
+                buyBtn.className = "px-5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all text-slate-400 hover:text-white";
+            }
+            renderProducts();
+        }
+
+        // --- 4. RENDER PRODUCTS CATALOG ---
+        function renderProducts() {
+            const grid = document.getElementById('productGrid');
+            const emptyState = document.getElementById('emptyState');
+
+            let filtered = productsData.filter(item => {
+                const matchCategory = (activeCategory === 'Semua') || (item.category === activeCategory);
+                const matchBrand = (activeBrand === 'Semua') || (item.brand === activeBrand);
+                const matchCondition = (activeCondition === 'Semua') || (item.condition === activeCondition);
+                const price = currentListingMode === 'buy' ? item.buyPrice : item.rentPricePerDay;
+                const matchPrice = price <= maxPrice;
+                const matchSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                                    item.brand.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                                    item.category.toLowerCase().includes(searchQuery.toLowerCase());
+
+                return matchCategory && matchBrand && matchCondition && matchPrice && matchSearch;
+            });
+
+            // Sorting
+            if(sortBy === 'price-low') {
+                filtered.sort((a,b) => (currentListingMode === 'buy' ? a.buyPrice - b.buyPrice : a.rentPricePerDay - b.rentPricePerDay));
+            } else if(sortBy === 'price-high') {
+                filtered.sort((a,b) => (currentListingMode === 'buy' ? b.buyPrice - a.buyPrice : b.rentPricePerDay - a.rentPricePerDay));
+            } else if(sortBy === 'newest') {
+                filtered.sort((a,b) => b.id - a.id);
+            } else { // popular
+                filtered.sort((a,b) => b.rating - a.rating);
+            }
+
+            document.getElementById('itemCount').innerText = filtered.length;
+
+            if(filtered.length === 0) {
+                grid.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            } else {
+                emptyState.classList.add('hidden');
+            }
+
+            grid.innerHTML = filtered.map(item => {
+                const isWishlisted = wishlist.some(w => w.id === item.id);
+                const isCompared = compareList.some(c => c.id === item.id);
+                const displayPrice = currentListingMode === 'buy' 
+                    ? `Rp ${item.buyPrice.toLocaleString('id-ID')}` 
+                    : `Rp ${item.rentPricePerDay.toLocaleString('id-ID')}<span class="text-xs text-slate-400 font-normal"> / hari</span>`;
+
+                return `
+                <div class="glass-card rounded-2xl overflow-hidden hover:border-slate-700 transition-all duration-300 hover:-translate-y-1 group flex flex-col justify-between">
+                    <div>
+                        <!-- Image Container -->
+                        <div class="relative h-48 sm:h-52 bg-slate-900 overflow-hidden cursor-pointer" onclick="openDetailModal(${item.id})">
+                            <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            
+                            <!-- Badges -->
+                            <div class="absolute top-3 left-3 flex flex-col gap-1.5">
+                                <span class="bg-slate-950/80 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-1 rounded-md border border-slate-700/50">
+                                    ${item.condition}
+                                </span>
+                                ${item.badge ? `<span class="bg-rose-600/90 text-white text-[10px] font-bold px-2.5 py-1 rounded-md shadow-md">${item.badge}</span>` : ''}
+                            </div>
+
+                            <!-- Favorite Button -->
+                            <button onclick="event.stopPropagation(); toggleWishlist(${item.id})" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-slate-950/70 text-slate-300 hover:text-rose-500 flex items-center justify-center backdrop-blur-md transition-colors">
+                                <i class="${isWishlisted ? 'fa-solid fa-heart text-rose-500' : 'fa-regular fa-heart'}"></i>
+                            </button>
+                        </div>
+
+                        <!-- Content -->
+                        <div class="p-4 space-y-2">
+                            <div class="flex items-center justify-between text-xs text-slate-400">
+                                <span>${item.brand} • ${item.category}</span>
+                                <span class="flex items-center gap-1 text-amber-400 font-medium">
+                                    <i class="fa-solid fa-star text-[10px]"></i> ${item.rating} (${item.reviewsCount})
+                                </span>
+                            </div>
+
+                            <h3 onclick="openDetailModal(${item.id})" class="font-bold text-slate-100 text-sm hover:text-rose-400 transition-colors line-clamp-2 cursor-pointer">
+                                ${item.name}
+                            </h3>
+
+                            <div class="text-xs text-slate-400 flex items-center gap-2">
+                                <i class="fa-solid fa-camera text-slate-500"></i>
+                                <span>SC: <strong class="text-slate-300">${typeof item.shutterCount === 'number' ? item.shutterCount.toLocaleString('id-ID') : item.shutterCount}</strong></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer Price & Actions -->
+                    <div class="p-4 pt-0 space-y-3">
+                        <div class="pt-2 border-t border-slate-800/80 flex items-baseline justify-between">
+                            <div>
+                                <div class="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">${currentListingMode === 'buy' ? 'Harga Beli' : 'Sewa per Hari'}</div>
+                                <div class="text-base font-extrabold text-rose-400">${displayPrice}</div>
+                            </div>
+                            <span class="text-[11px] text-slate-400 flex items-center gap-1">
+                                <i class="fa-solid fa-location-dot text-slate-500"></i> ${item.location}
+                            </span>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="toggleCompare(${item.id})" class="w-full py-2 px-2 rounded-xl text-xs font-semibold border ${isCompared ? 'border-amber-500 text-amber-400 bg-amber-500/10' : 'border-slate-800 text-slate-300 hover:bg-slate-800'} transition-all text-center flex items-center justify-center gap-1">
+                                <i class="fa-solid fa-code-compare text-[10px]"></i>
+                                <span>${isCompared ? 'Dibandingkan' : 'Bandingkan'}</span>
+                            </button>
+                            <button onclick="addToCart(${item.id})" class="w-full py-2 px-2 bg-rose-600 hover:bg-rose-500 text-white rounded-xl text-xs font-bold transition-all shadow-md shadow-rose-900/20 text-center flex items-center justify-center gap-1">
+                                <i class="fa-solid fa-cart-plus text-[10px]"></i>
+                                <span>+ Keranjang</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        function setCategoryFilter(cat) {
+            activeCategory = cat;
+            updateFilterUI('category-btn', cat);
+            renderProducts();
+        }
+
+        function setBrandFilter(brand) {
+            activeBrand = brand;
+            updateFilterUI('brand-btn', brand);
+            renderProducts();
+        }
+
+        function setConditionFilter(cond) {
+            activeCondition = cond;
+            updateFilterUI('cond-btn', cond);
+            renderProducts();
+        }
+
+        function filterByCategory(cat) {
+            setCategoryFilter(cat);
+            window.scrollTo({ top: 400, behavior: 'smooth' });
+        }
+
+        function updateFilterUI(className, activeText) {
+            document.querySelectorAll(`.${className}`).forEach(btn => {
+                if(btn.innerText.trim() === activeText) {
+                    btn.className = `${className} w-full text-left px-3 py-1.5 rounded-lg text-xs font-medium transition-colors bg-rose-600/20 text-rose-400 border border-rose-500/30`;
+                } else {
+                    btn.className = `${className} w-full text-left px-3 py-1.5 rounded-lg text-xs font-medium transition-colors text-slate-400 hover:bg-slate-800 hover:text-white`;
+                }
+            });
+        }
+
+        function updatePriceLabel() {
+            const val = document.getElementById('priceRange').value;
+            maxPrice = parseInt(val);
+            document.getElementById('priceLabel').innerText = `Rp ${(maxPrice / 1000000).toFixed(0)} Jt`;
+            renderProducts();
+        }
+
+        function handleSearch() {
+            searchQuery = document.getElementById('searchInput').value;
+            const clearBtn = document.getElementById('clearSearchBtn');
+            if(searchQuery.length > 0) {
+                clearBtn.classList.remove('hidden');
+            } else {
+                clearBtn.classList.add('hidden');
+            }
+            renderProducts();
+        }
+
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            searchQuery = '';
+            document.getElementById('clearSearchBtn').classList.add('hidden');
+            renderProducts();
+        }
+
+        function handleSortChange() {
+            sortBy = document.getElementById('sortSelect').value;
+            renderProducts();
+        }
+
+        function resetFilters() {
+            activeCategory = 'Semua';
+            activeBrand = 'Semua';
+            activeCondition = 'Semua';
+            searchQuery = '';
+            maxPrice = 120000000;
+            document.getElementById('priceRange').value = maxPrice;
+            document.getElementById('priceLabel').innerText = 'Rp 120 Jt';
+            document.getElementById('searchInput').value = '';
+            document.getElementById('clearSearchBtn').classList.add('hidden');
+            initFilters();
+            renderProducts();
+            showToast('Filter telah di-reset');
+        }
+
+        function toggleMobileFilter() {
+            const sidebar = document.getElementById('filterSidebar');
+            sidebar.classList.toggle('hidden');
+        }
+
+        function openDetailModal(productId) {
+            const item = productsData.find(p => p.id === productId);
+            if(!item) return;
+
+            const modalContent = document.getElementById('detailModalContent');
+            const displayPrice = currentListingMode === 'buy' 
+                ? `Rp ${item.buyPrice.toLocaleString('id-ID')}` 
+                : `Rp ${item.rentPricePerDay.toLocaleString('id-ID')} / hari`;
+
+            modalContent.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Gallery Area -->
+                    <div class="space-y-4">
+                        <div class="relative h-72 sm:h-80 bg-slate-950 rounded-2xl overflow-hidden border border-slate-800">
+                            <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover">
+                            <span class="absolute top-3 left-3 bg-rose-600 text-white text-xs font-bold px-3 py-1 rounded-full">
+                                ${item.condition}
+                            </span>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2">
+                            <img src="${item.image}" class="h-20 w-full object-cover rounded-xl border border-rose-500 cursor-pointer">
+                            <div class="h-20 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-center text-slate-500 text-xs">Sensor Bening</div>
+                            <div class="h-20 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-center text-slate-500 text-xs">Kelengkapan Box</div>
+                        </div>
+                    </div>
+
+                    <!-- Details Info -->
+                    <div class="space-y-5">
+                        <div>
+                            <div class="flex items-center gap-2 text-xs text-rose-400 font-semibold mb-1">
+                                <span>${item.brand}</span> • <span>${item.category}</span>
+                            </div>
+                            <h2 class="text-xl sm:text-2xl font-black text-white leading-tight">${item.name}</h2>
+                            <div class="flex items-center gap-3 mt-2 text-xs text-slate-400">
+                                <span class="flex items-center text-amber-400 font-bold"><i class="fa-solid fa-star mr-1"></i> ${item.rating} (${item.reviewsCount} Ulasan)</span>
+                                <span>•</span>
+                                <span class="text-emerald-400 font-medium"><i class="fa-solid fa-circle-check mr-1"></i> QC Passed</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800/80">
+                            <div class="text-xs text-slate-400 font-medium">${currentListingMode === 'buy' ? 'Harga Beli Cash' : 'Biaya Sewa / Hari'}</div>
+                            <div class="text-2xl font-black text-rose-400 mt-0.5">${displayPrice}</div>
+                        </div>
+
+                        <!-- Technical Specs Table -->
+                        <div class="space-y-2">
+                            <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Spesifikasi Utama</h4>
+                            <div class="grid grid-cols-2 gap-2 text-xs">
+                                <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800/60">
+                                    <span class="text-slate-500 block">Sensor:</span>
+                                    <span class="text-slate-200 font-medium">${item.specs.sensor}</span>
+                                </div>
+                                <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800/60">
+                                    <span class="text-slate-500 block">Shutter Count:</span>
+                                    <span class="text-amber-400 font-bold">${typeof item.shutterCount === 'number' ? item.shutterCount.toLocaleString('id-ID') : item.shutterCount}</span>
+                                </div>
+                                <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800/60">
+                                    <span class="text-slate-500 block">Resolusi Video:</span>
+                                    <span class="text-slate-200 font-medium">${item.specs.video}</span>
+                                </div>
+                                <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800/60">
+                                    <span class="text-slate-500 block">Mount Lensa:</span>
+                                    <span class="text-slate-200 font-medium">${item.specs.mount}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Seller Info -->
+                        <div class="p-3 bg-slate-950/60 rounded-xl border border-slate-800 flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center font-bold text-rose-400">
+                                    ${item.seller.charAt(0)}
+                                </div>
+                                <div>
+                                    <div class="text-xs font-bold text-white">${item.seller}</div>
+                                    <div class="text-[11px] text-slate-400"><i class="fa-solid fa-location-dot text-slate-500 mr-1"></i>${item.location}</div>
+                                </div>
+                            </div>
+                            <button class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded-lg text-slate-200">
+                                <i class="fa-solid fa-comments mr-1"></i> Chat Penjual
+                            </button>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="grid grid-cols-2 gap-3 pt-2">
+                            <button onclick="addToCart(${item.id}); closeModal('detailModal')" class="w-full py-3 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded-xl text-sm transition-all shadow-lg shadow-rose-900/30">
+                                + Masukkan Keranjang
+                            </button>
+                            <button onclick="toggleCompare(${item.id})" class="w-full py-3 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold rounded-xl text-sm border border-slate-700 transition-all">
+                                Bandingkan
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('detailModal').classList.remove('hidden');
+        }
+
+        function addToCart(productId) {
+            const item = productsData.find(p => p.id === productId);
+            if(!item) return;
+
+            const existing = cart.find(c => c.id === productId && c.mode === currentListingMode);
+            if(existing) {
+                existing.qty += 1;
+            } else {
+                cart.push({ ...item, qty: 1, mode: currentListingMode });
+            }
+
+            updateBadges();
+            showToast(`${item.name} ditambahkan ke Keranjang`);
+        }
+
+        function removeFromCart(productId, mode) {
+            cart = cart.filter(c => !(c.id === productId && c.mode === mode));
+            updateBadges();
+            renderCartModal();
+        }
+
+        function openCartModal() {
+            renderCartModal();
+            document.getElementById('cartModal').classList.remove('hidden');
+        }
+
+        function renderCartModal() {
+            const list = document.getElementById('cartItemsList');
+            const totalEl = document.getElementById('cartTotalPrice');
+
+            if(cart.length === 0) {
+                list.innerHTML = `<div class="text-center py-8 text-slate-500 text-sm">Keranjang Anda masih kosong.</div>`;
+                totalEl.innerText = 'Rp 0';
+                return;
+            }
+
+            let total = 0;
+            list.innerHTML = cart.map(item => {
+                const itemPrice = item.mode === 'buy' ? item.buyPrice : item.rentPricePerDay;
+                const subtotal = itemPrice * item.qty;
+                total += subtotal;
+
+                return `
+                <div class="flex items-center gap-3 bg-slate-950 p-3 rounded-2xl border border-slate-800">
+                    <img src="${item.image}" class="w-16 h-16 object-cover rounded-xl">
+                    <div class="flex-1 min-w-0">
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-800 text-rose-400 uppercase">${item.mode === 'buy' ? 'Beli' : 'Sewa'}</span>
+                        <h4 class="text-xs font-bold text-white truncate mt-1">${item.name}</h4>
+                        <div class="text-xs text-rose-400 font-semibold mt-0.5">Rp ${itemPrice.toLocaleString('id-ID')}</div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs text-slate-400">Qty: <strong>${item.qty}</strong></span>
+                        <button onclick="removeFromCart(${item.id}, '${item.mode}')" class="text-slate-500 hover:text-rose-500 p-1">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                </div>
+                `;
+            }).join('');
+
+            totalEl.innerText = `Rp ${total.toLocaleString('id-ID')}`;
+        }
+
+        function toggleWishlist(productId) {
+            const index = wishlist.findIndex(w => w.id === productId);
+            const item = productsData.find(p => p.id === productId);
+
+            if(index > -1) {
+                wishlist.splice(index, 1);
+                showToast(`Dihapus dari Wishlist`);
+            } else {
+                wishlist.push(item);
+                showToast(`${item.name} disimpan ke Wishlist`);
+            }
+
+            updateBadges();
+            renderProducts();
+        }
+
+        function openWishlistModal() {
+            const list = document.getElementById('wishlistItemsList');
+            if(wishlist.length === 0) {
+                list.innerHTML = `<div class="text-center py-8 text-slate-500 text-sm">Belum ada kamera favorit di wishlist.</div>`;
+            } else {
+                list.innerHTML = wishlist.map(item => `
+                <div class="flex items-center justify-between bg-slate-950 p-3 rounded-2xl border border-slate-800">
+                    <div class="flex items-center gap-3">
+                        <img src="${item.image}" class="w-14 h-14 object-cover rounded-xl">
+                        <div>
+                            <h4 class="text-xs font-bold text-white">${item.name}</h4>
+                            <div class="text-xs text-rose-400 font-semibold">Rp ${item.buyPrice.toLocaleString('id-ID')}</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="addToCart(${item.id})" class="px-3 py-1.5 bg-rose-600 text-white rounded-lg text-xs font-bold">
+                            + Keranjang
+                        </button>
+                        <button onclick="toggleWishlist(${item.id}); openWishlistModal()" class="text-slate-500 hover:text-rose-500 p-1">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                </div>
+                `).join('');
+            }
+            document.getElementById('wishlistModal').classList.remove('hidden');
+        }
+
+        function toggleCompare(productId) {
+            const index = compareList.findIndex(c => c.id === productId);
+            const item = productsData.find(p => p.id === productId);
+
+            if(index > -1) {
+                compareList.splice(index, 1);
+                showToast(`Dikeluarkan dari komparasi`);
+            } else {
+                if(compareList.length >= 3) {
+                    showToast(`Maksimal 3 kamera untuk dibandingkan!`, true);
+                    return;
+                }
+                compareList.push(item);
+                showToast(`${item.name} ditambahkan untuk dibandingkan`);
+            }
+
+            updateBadges();
+            renderProducts();
+        }
+
+        function openCompareModal() {
+            const container = document.getElementById('compareTableContainer');
+
+            if(compareList.length === 0) {
+                container.innerHTML = `
+                <div class="text-center py-12 text-slate-500">
+                    <i class="fa-solid fa-code-compare text-3xl mb-2"></i>
+                    <p class="text-sm">Belum ada kamera yang dipilih untuk dibandingkan.</p>
+                    <p class="text-xs text-slate-600 mt-1">Klik tombol 'Bandingkan' pada kartu produk di katalog.</p>
+                </div>`;
+            } else {
+                container.innerHTML = `
+                <table class="w-full text-left border-collapse min-w-[600px]">
+                    <thead>
+                        <tr class="border-b border-slate-800">
+                            <th class="p-3 text-xs text-slate-400 w-1/4">Spesifikasi</th>
+                            ${compareList.map(item => `
+                                <th class="p-3 text-center w-1/4">
+                                    <img src="${item.image}" class="w-20 h-20 object-cover rounded-xl mx-auto mb-2">
+                                    <div class="font-bold text-xs text-white line-clamp-1">${item.name}</div>
+                                    <div class="text-xs text-rose-400 font-extrabold mt-1">Rp ${item.buyPrice.toLocaleString('id-ID')}</div>
+                                    <button onclick="toggleCompare(${item.id}); openCompareModal()" class="text-[10px] text-rose-500 hover:underline mt-1">Hapus</button>
+                                </th>
+                            `).join('')}
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-800/60 text-xs">
+                        <tr>
+                            <td class="p-3 font-semibold text-slate-400">Brand / Kategori</td>
+                            ${compareList.map(item => `<td class="p-3 text-center text-slate-200">${item.brand} (${item.category})</td>`).join('')}
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-semibold text-slate-400">Sensor</td>
+                            ${compareList.map(item => `<td class="p-3 text-center text-slate-200">${item.specs.sensor}</td>`).join('')}
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-semibold text-slate-400">Prosesor / Fitur</td>
+                            ${compareList.map(item => `<td class="p-3 text-center text-slate-200">${item.specs.processor}</td>`).join('')}
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-semibold text-slate-400">Resolusi Video</td>
+                            ${compareList.map(item => `<td class="p-3 text-center text-slate-200">${item.specs.video}</td>`).join('')}
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-semibold text-slate-400">Shutter Count</td>
+                            ${compareList.map(item => `<td class="p-3 text-center text-amber-400 font-bold">${typeof item.shutterCount === 'number' ? item.shutterCount.toLocaleString('id-ID') : item.shutterCount}</td>`).join('')}
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-semibold text-slate-400">Bobot Unit</td>
+                            ${compareList.map(item => `<td class="p-3 text-center text-slate-200">${item.specs.weight}</td>`).join('')}
+                        </tr>
+                    </tbody>
+                </table>
+                `;
+            }
+
+            document.getElementById('compareModal').classList.remove('hidden');
+        }
+
+        function openSellModal() {
+            document.getElementById('sellModal').classList.remove('hidden');
+        }
+
+        function handleSellSubmit(e) {
+            e.preventDefault();
+            closeModal('sellModal');
+            showToast('Penawaran Anda berhasil dikirim! Tim kurasi akan mereview dalam 1x24 jam.');
+        }
+
+        function simulateCheckout() {
+            if(cart.length === 0) return;
+            closeModal('cartModal');
+            cart = [];
+            updateBadges();
+            showToast('Simulasi Checkout Berhasil! Invoice telah dikirim.');
+        }
+
+        // Helpers
+        function updateBadges() {
+            const cartBadge = document.getElementById('cartBadge');
+            const wishlistBadge = document.getElementById('wishlistBadge');
+            const compareBadge = document.getElementById('compareBadge');
+
+            const totalCartQty = cart.reduce((acc, curr) => acc + curr.qty, 0);
+            if(totalCartQty > 0) {
+                cartBadge.innerText = totalCartQty;
+                cartBadge.classList.remove('hidden');
+            } else {
+                cartBadge.classList.add('hidden');
+            }
+
+            if(wishlist.length > 0) {
+                wishlistBadge.innerText = wishlist.length;
+                wishlistBadge.classList.remove('hidden');
+            } else {
+                wishlistBadge.classList.add('hidden');
+            }
+
+            if(compareList.length > 0) {
+                compareBadge.innerText = compareList.length;
+                compareBadge.classList.remove('hidden');
+            } else {
+                compareBadge.classList.add('hidden');
+            }
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMsg');
+            const toastIcon = document.getElementById('toastIcon');
+
+            toastMsg.innerText = message;
+            if(isError) {
+                toastIcon.className = "fa-solid fa-triangle-exclamation text-amber-500 text-lg";
+            } else {
+                toastIcon.className = "fa-solid fa-circle-check text-rose-500 text-lg";
+            }
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
